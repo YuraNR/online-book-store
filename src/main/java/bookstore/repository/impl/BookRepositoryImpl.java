@@ -1,19 +1,18 @@
 package bookstore.repository.impl;
 
+import bookstore.exception.DataProcessingException;
 import bookstore.model.Book;
 import bookstore.repository.BookRepository;
 import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository {
     private final SessionFactory sessionFactory;
 
-    @Autowired
     public BookRepositoryImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -27,11 +26,11 @@ public class BookRepositoryImpl implements BookRepository {
             transaction = session.beginTransaction();
             session.persist(book);
             transaction.commit();
-        } catch (Exception e) {
+        } catch (Exception ex) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Can't add country to DB");
+            throw new DataProcessingException("Can't add book to DB" + book, ex);
         } finally {
             if (session != null) {
                 session.close();
@@ -43,9 +42,9 @@ public class BookRepositoryImpl implements BookRepository {
     @Override
     public List<Book> findAll() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("SELECT b FROM Book b", Book.class).getResultList();
-        } catch (Exception e) {
-            throw new RuntimeException("Can't get all users", e);
+            return session.createQuery("FROM Book", Book.class).getResultList();
+        } catch (Exception ex) {
+            throw new DataProcessingException("Can't get all books from DB", ex);
         }
     }
 }
