@@ -1,9 +1,10 @@
 package bookstore.repository.impl;
 
-import bookstore.exception.DataProcessingException;
+import bookstore.exception.EntityNotFoundException;
 import bookstore.model.Book;
 import bookstore.repository.BookRepository;
 import java.util.List;
+import java.util.Optional;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -30,7 +31,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new DataProcessingException("Can't add book to DB" + book, ex);
+            throw new EntityNotFoundException("Can't add book to DB" + book, ex);
         } finally {
             if (session != null) {
                 session.close();
@@ -40,11 +41,20 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
+    public Optional<Book> findById(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            return Optional.ofNullable(session.find(Book.class, id));
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can't find book by id from DB: " + id);
+        }
+    }
+
+    @Override
     public List<Book> findAll() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Book", Book.class).getResultList();
         } catch (Exception ex) {
-            throw new DataProcessingException("Can't get all books from DB", ex);
+            throw new EntityNotFoundException("Can't get all books from DB", ex);
         }
     }
 }
