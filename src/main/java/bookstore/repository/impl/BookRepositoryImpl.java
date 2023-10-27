@@ -1,5 +1,6 @@
 package bookstore.repository.impl;
 
+import bookstore.exception.DataProcessingException;
 import bookstore.exception.EntityNotFoundException;
 import bookstore.model.Book;
 import bookstore.repository.BookRepository;
@@ -31,7 +32,7 @@ public class BookRepositoryImpl implements BookRepository {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new EntityNotFoundException("Can't add book to DB" + book, ex);
+            throw new DataProcessingException("Can't add book to DB" + book, ex);
         } finally {
             if (session != null) {
                 session.close();
@@ -54,7 +55,7 @@ public class BookRepositoryImpl implements BookRepository {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Book", Book.class).getResultList();
         } catch (Exception ex) {
-            throw new EntityNotFoundException("Can't get all books from DB", ex);
+            throw new DataProcessingException("Can't get all books from DB", ex);
         }
     }
 }

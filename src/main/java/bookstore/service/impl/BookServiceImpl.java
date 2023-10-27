@@ -4,7 +4,6 @@ import bookstore.dto.BookDto;
 import bookstore.dto.CreateBookRequestDto;
 import bookstore.exception.EntityNotFoundException;
 import bookstore.mapper.BookMapper;
-import bookstore.model.Book;
 import bookstore.repository.BookRepository;
 import bookstore.service.BookService;
 import java.util.List;
@@ -19,8 +18,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
-        Book book = bookMapper.toBook(requestDto);
-        return bookMapper.toDto(bookRepository.save(book));
+        return bookMapper.toDto(bookRepository.save(bookMapper.toBook(requestDto)));
     }
 
     @Override
@@ -32,8 +30,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto findById(Long id) {
-        Book book = bookRepository.findById(id)
+        return bookRepository.findById(id)
+                .map(bookMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Can't not find book by id " + id));
-        return bookMapper.toDto(book);
     }
 }
