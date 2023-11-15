@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,14 +34,15 @@ public class BookController {
     @GetMapping
     @Operation(summary = "Get all books",
             description = "Get a list of all books")
-    public List<BookDto> getAll(@PageableDefault(page = 0, size = 2) Pageable pageable) {
+    public List<BookDto> getAll(@PageableDefault(page = 0, size = 2, direction = Sort.Direction.ASC)
+                                    Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
     @Operation(summary = "Get book by id",
-            description = "Get book by id data is correct")
+            description = "Get book by id")
     public BookDto getBookById(@PathVariable @Positive Long id) {
         return bookService.findById(id);
     }
