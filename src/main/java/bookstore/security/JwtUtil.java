@@ -16,17 +16,17 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
     private SecretKey secret;
     @Value("${jwt.expiration}")
-    private long expiration;
+    private Long expiration;
 
-    public JwtUtil(@Value("${jwt.secret}") String secretString) {
-        secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
+    public JwtUtil(@Value("${jwt.secret}") String secret) {
+        this.secret = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String getUserName(String token) {
-        return getChainFromToken(token, Claims::getSubject);
+        return getClaimFromToken(token, Claims::getSubject);
     }
 
-    private <T> T getChainFromToken(String token, Function<Claims, T> claimsResolver) {
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = Jwts.parser()
                 .verifyWith(secret)
                 .build()
@@ -35,9 +35,9 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(String username) {
+    public String generateToken(String userName) {
         return Jwts.builder()
-                .subject(username)
+                .subject(userName)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secret)
@@ -50,10 +50,9 @@ public class JwtUtil {
                     .verifyWith(secret)
                     .build()
                     .parseSignedClaims(token);
-
             return !claimsJws.getPayload().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtException("Expired or invalid JWT token");
+        } catch (JwtException | IllegalArgumentException ex) {
+            throw new JwtException("Token is expired or invalid", ex);
         }
     }
 }

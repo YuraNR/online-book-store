@@ -6,13 +6,13 @@ import bookstore.model.User;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.NullValueCheckStrategy;
+import org.springframework.stereotype.Component;
 
-@Mapper(
-        componentModel = "spring",
+@Component
+@Mapper(componentModel = "spring",
         injectionStrategy = InjectionStrategy.CONSTRUCTOR,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
-        implementationPackage = "<PACKAGE_NAME>.impl"
-)
+        implementationPackage = "<PACKAGE_NAME>.impl")
 public interface UserMapper {
     UserResponseDto toUserResponseDto(User user);
 
