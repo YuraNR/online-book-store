@@ -35,7 +35,7 @@ public class BookController {
     @GetMapping
     @Operation(summary = "Get all books",
             description = "Get a list of all books")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     public List<BookDto> getAll(@PageableDefault(page = 0, size = 2, direction = Sort.Direction.ASC)
                                     Pageable pageable) {
         return bookService.findAll(pageable);
@@ -45,7 +45,7 @@ public class BookController {
     @GetMapping("/{id}")
     @Operation(summary = "Get book by id",
             description = "Get book by id")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     public BookDto getBookById(@PathVariable @Positive Long id) {
         return bookService.findById(id);
     }
@@ -54,7 +54,7 @@ public class BookController {
     @PostMapping
     @Operation(summary = "Create a new book",
             description = "Check data and create a new book")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
@@ -63,7 +63,7 @@ public class BookController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete book by id",
             description = "Delete book by id")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public void deleteById(@PathVariable @Positive Long id) {
         bookService.deleteById(id);
     }
@@ -72,7 +72,7 @@ public class BookController {
     @PutMapping("/{id}")
     @Operation(summary = "Update book by id",
             description = "Check data and update book by id")
-    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public BookDto updateBook(@PathVariable @Positive Long id,
                               @RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.updateById(id, requestDto);
