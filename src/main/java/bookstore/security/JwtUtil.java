@@ -16,28 +16,15 @@ import org.springframework.stereotype.Component;
 public class JwtUtil {
     private SecretKey secret;
     @Value("${jwt.expiration}")
-    private Long expiration;
+    private long expiration;
 
-    public JwtUtil(@Value("${jwt.secret}") String secret) {
-        this.secret = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    public JwtUtil(@Value("${jwt.secret}") String secretString) {
+        secret = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8));
     }
 
-    public String getUserName(String token) {
-        return getClaimFromToken(token, Claims::getSubject);
-    }
-
-    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = Jwts.parser()
-                .verifyWith(secret)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claimsResolver.apply(claims);
-    }
-
-    public String generateToken(String userName) {
+    public String generateToken(String username) {
         return Jwts.builder()
-                .subject(userName)
+                .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secret)
@@ -50,9 +37,22 @@ public class JwtUtil {
                     .verifyWith(secret)
                     .build()
                     .parseSignedClaims(token);
-            return !claimsJws.getPayload().getExpiration().before(new Date());
-        } catch (JwtException | IllegalArgumentException ex) {
-            throw new JwtException("Token is expired or invalid", ex);
+            return claimsJws.getPayload().getExpiration().after(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtException("Expired or invalid JWT token");
         }
+    }
+
+    public String getUsername(String token) {
+        return getClaimFromToken(token, Claims::getSubject);
+    }
+
+    private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = Jwts.parser()
+                .verifyWith(secret)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+        return claimsResolver.apply(claims);
     }
 }

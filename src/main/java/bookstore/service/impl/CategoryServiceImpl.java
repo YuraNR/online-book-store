@@ -1,10 +1,8 @@
 package bookstore.service.impl;
 
-import bookstore.dto.BookDtoWithoutCategoryIds;
 import bookstore.dto.CategoryDto;
 import bookstore.dto.CreateCategoryRequestDto;
 import bookstore.exception.EntityNotFoundException;
-import bookstore.mapper.BookMapper;
 import bookstore.mapper.CategoryMapper;
 import bookstore.model.Category;
 import bookstore.repository.CategoryRepository;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final BookMapper bookMapper;
 
     @Override
     public List<CategoryDto> findAll(Pageable pageable) {
@@ -29,11 +26,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<BookDtoWithoutCategoryIds> findAllByCategoryId(Long categoryId) {
-        return categoryRepository.findAllByCategoryId(categoryId)
-                .stream()
-                .map(bookMapper::toDtoWithoutCategories)
-                .toList();
+    public CategoryDto getCategoryById(Long id) {
+        return categoryRepository.findById(id).stream()
+                .map(categoryMapper::toDto)
+                .findAny()
+                .orElseThrow(() -> new EntityNotFoundException("Can`t find category by id " + id));
     }
 
     @Override
@@ -43,7 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto updateCategory(Long id, CreateCategoryRequestDto requestDto) {
+    public CategoryDto updateCategoryById(Long id, CreateCategoryRequestDto requestDto) {
         Category category = categoryRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("There is no category with the id: " + id)
         );

@@ -3,6 +3,7 @@ package bookstore.controller;
 import bookstore.dto.BookDtoWithoutCategoryIds;
 import bookstore.dto.CategoryDto;
 import bookstore.dto.CreateCategoryRequestDto;
+import bookstore.service.BookService;
 import bookstore.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,33 +27,34 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/categories")
 @RequiredArgsConstructor
+@Validated
 @Tag(name = "Category management",
         description = "Endpoints for category")
 public class CategoryController {
     private final CategoryService categoryService;
+    private final BookService bookService;
 
     @GetMapping
     @Operation(summary = "Get all categories",
             description = "Get categories")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     public List<CategoryDto> getAll(Pageable pageable) {
         return categoryService.findAll(pageable);
     }
 
-    @GetMapping("/{id}/books")
-    @Operation(summary = "Get all books by category id",
-            description = "Check id, and get all books from the category")
-    @PreAuthorize("hasRole('USER')")
-    public List<BookDtoWithoutCategoryIds> getAllByCategory(@PathVariable @Positive Long id) {
-        return categoryService.findAllByCategoryId(id);
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @Operation(summary = "Get a category by id", description = "Get a category by id")
+    public CategoryDto getCategoryById(@PathVariable Long id) {
+        return categoryService.getCategoryById(id);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Save a category to DB",
             description = "Save a category to DB")
-    @PreAuthorize("hasRole('ADMIN')")
-    public CategoryDto saveCategory(@RequestBody CreateCategoryRequestDto requestDto) {
+    public CategoryDto createCategory(@RequestBody CreateCategoryRequestDto requestDto) {
         return categoryService.save(requestDto);
     }
 
@@ -61,7 +64,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ADMIN')")
     public CategoryDto updateCategory(@PathVariable @Positive Long id,
                                       @RequestBody CreateCategoryRequestDto requestDto) {
-        return categoryService.updateCategory(id, requestDto);
+        return categoryService.updateCategoryById(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
@@ -71,5 +74,13 @@ public class CategoryController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategoryById(id);
+    }
+
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @Operation(summary = "Get all books by category id",
+            description = "Get a list of all books by category id")
+    @GetMapping(value = "/{id}/books")
+    public List<BookDtoWithoutCategoryIds> getBooksByCategoryId(@PathVariable Long id) {
+        return bookService.findAllByCategoryId(id);
     }
 }

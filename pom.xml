@@ -120,10 +120,8 @@
                         </goals>
                     </execution>
                 </executions>
-
                 <configuration>
                     <configLocation>${maven.checkstyle.plugin.configLocation}</configLocation>
-
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <linkXRef>false</linkXRef>
@@ -131,6 +129,7 @@
                     <sourceDirectories>src</sourceDirectories>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -157,10 +156,12 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
             </plugin>
+
         </plugins>
     </build>
 </project>

@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = new User();
         user.setPassword(passwordEncoder.encode(requestDto.password()));
-        user.setRoles(Set.of(roleRepository.findRoleByName(Role.RoleName.ROLE_USER)));
+        user.setRoles(Set.of(roleRepository.findRoleByName(Role.RoleName.USER)));
         User savedUser = userRepository.save(user);
         return userMapper.toUserResponseDto(savedUser);
     }
