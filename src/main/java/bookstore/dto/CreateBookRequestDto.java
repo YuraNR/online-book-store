@@ -14,5 +14,5 @@ public record CreateBookRequestDto(@NotBlank String title,
                                    @NotNull @PositiveOrZero BigDecimal price,
                                    @Size(max = 255) String description,
                                    @Size(max = 255) String coverImage,
-                                   Set<Long> categoriesIds) {
+                                   Set<Long> categoryIds) {
 }

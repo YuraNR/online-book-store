@@ -7,8 +7,11 @@ import bookstore.exception.EntityNotFoundException;
 import bookstore.mapper.BookMapper;
 import bookstore.model.Book;
 import bookstore.repository.BookRepository;
+import bookstore.repository.CategoryRepository;
 import bookstore.service.BookService;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,10 +21,13 @@ import org.springframework.stereotype.Service;
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
-        return bookMapper.toDto(bookRepository.save(bookMapper.toBook(requestDto)));
+        Book book = bookMapper.toBook(requestDto);
+        setBookCategories(book, requestDto.categoryIds());
+        return bookMapper.toDto(bookRepository.save(book));
     }
 
     @Override
@@ -56,5 +62,11 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAllByCategoryId(categoryId).stream()
                 .map(bookMapper::toDtoWithoutCategories)
                 .toList();
+    }
+
+    private void setBookCategories(Book book, Set<Long> categoryIds) {
+        book.setCategories(categoryIds.stream()
+                .map(categoryRepository::getReferenceById)
+                .collect(Collectors.toSet()));
     }
 }

@@ -10,5 +10,5 @@ public record BookDto(Long id,
                       BigDecimal price,
                       String description,
                       String coverImage,
-                      Set<Long> categoriesIds) {
+                      Set<Long> categoryIds) {
 }

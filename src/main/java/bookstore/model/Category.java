@@ -28,5 +28,3 @@ public class Category {
     @Column(nullable = false)
     private boolean isDeleted = false;
 }
-
-
