@@ -9,7 +9,7 @@ import bookstore.model.User;
 import bookstore.repository.RoleRepository;
 import bookstore.repository.UserRepository;
 import bookstore.service.UserService;
-import java.util.Set;
+import java.util.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,13 +25,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
-        if (userRepository.existsByEmail(requestDto.email())) {
-            throw new RegistrationException("User with such email already exists");
+        if (userRepository.findByEmail(requestDto.email()).isPresent()) {
+            throw new RegistrationException("Unable to complete registration");
         }
-        User user = new User();
+        User user = userMapper.toUser(requestDto);
         user.setPassword(passwordEncoder.encode(requestDto.password()));
-        user.setRoles(Set.of(roleRepository.findRoleByName(Role.RoleName.ROLE_USER)));
-        User savedUser = userRepository.save(user);
-        return userMapper.toUserResponseDto(savedUser);
+        user.setRoles(Collections.singleton(roleRepository.findRoleByName(Role.RoleName.USER)));
+        return userMapper.toUserResponseDto(userRepository.save(user));
     }
 }
