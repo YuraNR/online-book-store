@@ -69,8 +69,4 @@ public class BookServiceImpl implements BookService {
                 .map(categoryRepository::getReferenceById)
                 .collect(Collectors.toSet()));
     }
-
-    public Book getBookById(Long bookId) {
-        return bookRepository.findById(bookId).orElse(null);
-    }
 }

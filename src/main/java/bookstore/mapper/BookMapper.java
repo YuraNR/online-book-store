@@ -19,7 +19,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
         implementationPackage = "<PACKAGE_NAME>.impl")
 public interface BookMapper {
 
-    @Mapping(target = "categoryIds", source = "categories", ignore = true)
+    @Mapping(target = "categoryIds", source = "categories")
     BookDto toDto(Book book);
 
     Book toBook(CreateBookRequestDto requestDto);

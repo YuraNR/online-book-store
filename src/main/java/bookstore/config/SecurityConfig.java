@@ -1,7 +1,5 @@
 package bookstore.config;
 
-import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
-
 import bookstore.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -38,10 +36,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                                 .requestMatchers(
-                                        antMatcher("/api/auth/**"),
-                                        antMatcher("/swagger-ui/**"),
-                                        antMatcher("/v3/api-docs/**"),
-                                        antMatcher("/errors")
+                                        "/api/auth/**",
+                                        "/error",
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**"
                                 )
                                 .permitAll()
                                 .anyRequest()

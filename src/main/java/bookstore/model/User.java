@@ -53,11 +53,6 @@ public class User implements UserDetails {
             cascade = CascadeType.ALL)
     private ShoppingCart shoppingCart;
 
-    public void addShoppingCart(ShoppingCart shoppingCart) {
-        this.shoppingCart = shoppingCart;
-        shoppingCart.setUser(this);
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
