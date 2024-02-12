@@ -40,9 +40,9 @@ public class Order {
     private Status status;
     @Column(name = "total", nullable = false)
     private BigDecimal total;
-    @Column(name = "orderDate", nullable = false)
+    @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
-    @Column(name = "shippingAddress", nullable = false)
+    @Column(name = "shipping_address", nullable = false)
     private String shippingAddress;
     @OneToMany(mappedBy = "order",
             orphanRemoval = true,

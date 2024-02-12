@@ -78,16 +78,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderItemResponseDto findOrderItemByIdInOrder(Long orderId,
                                                          Long orderItemId, Long userId) {
-        Order order = checkIfOrderExistsById(orderId);
-        checkIfOrderBelongsToUser(order.getUser().getId(), userId, orderId);
-        OrderItem orderItem = orderItemRepository.findById(orderItemId).orElseThrow(
-                () -> new EntityNotFoundException("no such order")
-        );
-        if (orderItem.getOrder().getId().equals(orderId)) {
-            return orderItemMapper.toDto(orderItem);
-        } else {
-            throw new EntityNotFoundException("No such order");
-        }
+        OrderItem byIdAndOrderIdAndUserId = orderItemRepository
+                .findByIdAndOrderIdAndUserId(orderItemId, orderId, userId);
+        return orderItemMapper.toDto(byIdAndOrderIdAndUserId);
     }
 
     @Override

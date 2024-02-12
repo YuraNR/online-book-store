@@ -47,9 +47,4 @@ public class Book {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new HashSet<>();
-
-//    @OneToMany(mappedBy = "book",
-//            orphanRemoval = true,
-//            cascade = CascadeType.REMOVE)
-//    private List<CartItem> cartItems = new ArrayList<>();
 }

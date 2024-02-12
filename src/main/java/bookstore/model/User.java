@@ -35,11 +35,11 @@ public class User implements UserDetails {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "firstName", nullable = false)
+    @Column(name = "first_name", nullable = false)
     private String firstName;
-    @Column(name = "lastName", nullable = false)
+    @Column(name = "last_name", nullable = false)
     private String lastName;
-    @Column(name = "shippingAddress")
+    @Column(name = "shipping_address")
     private String shippingAddress;
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;

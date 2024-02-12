@@ -31,6 +31,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookController {
     private final BookService bookService;
 
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping
+    @Operation(summary = "Create a new book",
+            description = "Check data and create a new book")
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
+        return bookService.save(requestDto);
+    }
+
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
     @Operation(summary = "Get all books",
@@ -48,15 +57,6 @@ public class BookController {
     @PreAuthorize("hasAnyRole('USER')")
     public BookDto getBookById(@PathVariable @Positive Long id) {
         return bookService.findById(id);
-    }
-
-    @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping
-    @Operation(summary = "Create a new book",
-            description = "Check data and create a new book")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
-        return bookService.save(requestDto);
     }
 
     @ResponseStatus(HttpStatus.OK)
