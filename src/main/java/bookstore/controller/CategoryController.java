@@ -34,6 +34,15 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final BookService bookService;
 
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Save a category to DB",
+            description = "Save a category to DB")
+    public CategoryDto createCategory(@RequestBody CreateCategoryRequestDto requestDto) {
+        return categoryService.save(requestDto);
+    }
+
     @GetMapping
     @Operation(summary = "Get all categories",
             description = "Get categories")
@@ -47,15 +56,6 @@ public class CategoryController {
     @Operation(summary = "Get a category by id", description = "Get a category by id")
     public CategoryDto getCategoryById(@PathVariable Long id) {
         return categoryService.getCategoryById(id);
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "Save a category to DB",
-            description = "Save a category to DB")
-    public CategoryDto createCategory(@RequestBody CreateCategoryRequestDto requestDto) {
-        return categoryService.save(requestDto);
     }
 
     @PutMapping("/{id}")
