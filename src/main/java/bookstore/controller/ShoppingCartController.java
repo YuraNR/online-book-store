@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/api/cart")
+@RequestMapping("/carts")
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
