@@ -60,7 +60,7 @@ The goal of the project was to provide an intuitive interface and enable book ma
        - `POST /orders`: Create a new order (USER).
        - `GET /orders`: Retrieve all orders (USER).
        - `GET /orders/{orderId}/items`: Get order details by ID (USER).
-       - `PUT /orders/orderId`: Update order status by ID (ADMIN).
+       - `PATCH /orders/orderId`: Update order status by ID (ADMIN).
 
 
 ## Setup and Usage

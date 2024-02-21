@@ -35,8 +35,8 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 .body(ex.getMessage());
     }
 
-    @ExceptionHandler(OrderException.class)
-    public ResponseEntity<Object> handleCreateOrderException(OrderException ex) {
+    @ExceptionHandler(OrderProcessingException.class)
+    public ResponseEntity<Object> handleCreateOrderException(OrderProcessingException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ex.getMessage());
     }

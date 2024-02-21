@@ -4,7 +4,7 @@ import bookstore.dto.order.OrderRequestDto;
 import bookstore.dto.order.OrderResponseDto;
 import bookstore.dto.orderitem.OrderItemResponseDto;
 import bookstore.exception.EntityNotFoundException;
-import bookstore.exception.OrderException;
+import bookstore.exception.OrderProcessingException;
 import bookstore.mapper.OrderItemMapper;
 import bookstore.mapper.OrderMapper;
 import bookstore.model.CartItem;
@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
                         + user.getId()));
         Set<CartItem> cartItems = shoppingCart.getCartItems();
         if (cartItems.isEmpty()) {
-            throw new OrderException("There is no order");
+            throw new OrderProcessingException("There is no order");
         }
         Order order = new Order();
         order.setUser(user);
@@ -122,6 +122,7 @@ public class OrderServiceImpl implements OrderService {
 
     private Order checkIfOrderExistsById(Long orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new EntityNotFoundException("There is now order with id: "));
+                .orElseThrow(() -> new EntityNotFoundException("There is now order with id: "
+                        + orderId));
     }
 }
