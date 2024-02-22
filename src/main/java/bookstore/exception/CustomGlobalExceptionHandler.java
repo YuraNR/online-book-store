@@ -35,6 +35,12 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                 .body(ex.getMessage());
     }
 
+    @ExceptionHandler(OrderProcessingException.class)
+    public ResponseEntity<Object> handleCreateOrderException(OrderProcessingException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ex.getMessage());
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
