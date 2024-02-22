@@ -21,9 +21,10 @@ The goal of the project was to provide an intuitive interface and enable book ma
 - **🗺️ MapStruct**: Object mapping between DTOs and models.
 - **📘 Swagger**: API documentation generation.
 - **✅ Jakarta Validation**: Ensuring data integrity with validation annotations.
-- **🔄Liquibase**: Database schema version control.
+- **🔄 Liquibase**: Database schema version control.
 - **🐬 MySQL**: Relational database management system.
 - **🌶️ Lombok️**: Reducing boilerplate code in Java classes.
+- **🐳 Docker**: Platform used to create, deploy and manage containers.
 
 ## Functionality Overview
 
@@ -75,7 +76,7 @@ The goal of the project was to provide an intuitive interface and enable book ma
 3. Run `mvn spring-boot:run` to start the application 💻
 
 ### API Endpoints
-- Use Postman to explore and test available endpoints.
+- Access Swagger UI (`/swagger-ui.html`) to explore and test available endpoints.
 - Utilize the following endpoints:
     - User registration 📝
     - Book and category management 📚
@@ -98,6 +99,9 @@ Implemented robust exception handling to provide clear and understandable error 
 
 ### Pagination 📖
 Implemented pagination for improved data handling, allowing the presentation of large data sets in manageable chunks for better user experience.
+
+### Continuous Integration with Docker 🐳
+Integrated Docker into the continuous integration pipeline, automating the building and testing of Docker images to maintain consistent quality throughout the development lifecycle.
 
 ## Project Summary
 
